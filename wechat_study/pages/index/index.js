@@ -8,7 +8,10 @@ Page({
    */
   data: {
     message: '测试数据',
-    msg2: '断点测试数据'
+    msg2: '断点测试数据',
+    userInfo: {
+
+    },
   },
   
   handleParent(){
@@ -24,6 +27,18 @@ Page({
     wx.navigateTo({
       url: '/pages/logs/logs'
     })
+  },
+
+  // 获取用户信息的回调
+  handleGetUserInfo(res){
+    // console.log('用户点击了。。。')
+    console.log(res)
+    if(res.detail.userInfo){ // 用户允许授权
+      // 更新userInfo的状态数据
+      this.setData({
+        userInfo: res.detail.userInfo
+      })
+    }
   },
 
 
@@ -44,7 +59,20 @@ Page({
   //  }, 2000)
 
   // 发请求获取数据
-  },
+
+
+  // 授权以后获取用户基本信息
+  wx.getUserInfo({
+    success: (res) => {
+      this.setData({
+        userInfo: res.userInfo
+      })
+    },
+    fail: () => {
+      console.log('获取失败。。。')
+    }
+  })
+},
 
 
 

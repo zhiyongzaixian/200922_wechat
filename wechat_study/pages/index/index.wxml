@@ -1,6 +1,7 @@
 <view class="indexContainer">
-  <image class="avatarUrl" src="/static/images/nvsheng.jpg"></image>
-  <text  class="userName">{{message}}</text>
+  <image wx:if='{{userInfo.avatarUrl}}' class="avatarUrl" src="{{userInfo.avatarUrl}}"></image>
+  <button wx:else open-type="getUserInfo" bindgetuserinfo='handleGetUserInfo'>获取用户信息</button>
+  <text  class="userName">{{userInfo.nickName}}</text>
   <!-- <text  class="userName">{{msg2}}</text> -->
 
   <!-- 事件绑定 -->
