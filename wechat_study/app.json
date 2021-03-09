@@ -2,5 +2,10 @@
   "pages": [
     "pages/index/index"
   ],
-  "sitemapLocation": "sitemap34.json"
+  "sitemapLocation": "sitemap.json",
+  "window": {
+    "navigationBarBackgroundColor": "#f0f",
+    "navigationBarTextStyle": "white",
+    "navigationBarTitleText": "atguigu"
+  }
 }
