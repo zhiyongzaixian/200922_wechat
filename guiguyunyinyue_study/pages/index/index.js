@@ -1,4 +1,4 @@
-// pages/index/index.js
+import request from '../../utils/request'
 Page({
 
   /**
@@ -6,6 +6,7 @@ Page({
    */
   data: {
     bannersList: [], // 轮播图数据
+    recommendList: [],// 推荐歌曲数据
   },
 
   /**
@@ -13,17 +14,20 @@ Page({
    */
   onLoad: function (options) {
     // this === 页面的实例
-    wx.request({
-      url: 'http://localhost:3000/banner?type=2',
-      success: (res) => {
-        console.log(res);
-        this.setData({
-          bannersList: res.data.banners
-        })
-      },
-      fail: (err) => {
-        console.log('请求失败', err)
-      }
+    this.getInitData();
+  },
+
+  // 封装获取初始化数据的方法
+  async getInitData(){
+    let bannersListResult = await request('/banner', {type: 2});
+    this.setData({
+      bannersList: bannersListResult.banners
+    })
+
+    // 获取推荐歌曲数据
+    let recommendListResult = await request('/personalized', {limit: 10});
+    this.setData({
+      recommendList: recommendListResult.result
     })
   },
 

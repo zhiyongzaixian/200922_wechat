@@ -46,40 +46,9 @@
     </view>
     <!-- 内容区 -->
     <scroll-view class="recommendScroll" enable-flex scroll-x>
-      <view class="recommendItem">
-        <image src="/static/images/nvsheng.jpg"></image>
-        <text>我喜欢贾静雯，贾静雯也喜欢我我喜欢贾静雯，贾静雯也喜欢我</text>
-      </view>
-      <view class="recommendItem">
-        <image src="/static/images/nvsheng.jpg"></image>
-        <text>我喜欢贾静雯，贾静雯也喜欢我</text>
-      </view><view class="recommendItem">
-        <image src="/static/images/nvsheng.jpg"></image>
-        <text>我喜欢贾静雯，贾静雯也喜欢我</text>
-      </view><view class="recommendItem">
-        <image src="/static/images/nvsheng.jpg"></image>
-        <text>我喜欢贾静雯，贾静雯也喜欢我</text>
-      </view><view class="recommendItem">
-        <image src="/static/images/nvsheng.jpg"></image>
-        <text>我喜欢贾静雯，贾静雯也喜欢我</text>
-      </view><view class="recommendItem">
-        <image src="/static/images/nvsheng.jpg"></image>
-        <text>我喜欢贾静雯，贾静雯也喜欢我</text>
-      </view><view class="recommendItem">
-        <image src="/static/images/nvsheng.jpg"></image>
-        <text>我喜欢贾静雯，贾静雯也喜欢我</text>
-      </view><view class="recommendItem">
-        <image src="/static/images/nvsheng.jpg"></image>
-        <text>我喜欢贾静雯，贾静雯也喜欢我</text>
-      </view><view class="recommendItem">
-        <image src="/static/images/nvsheng.jpg"></image>
-        <text>我喜欢贾静雯，贾静雯也喜欢我</text>
-      </view><view class="recommendItem">
-        <image src="/static/images/nvsheng.jpg"></image>
-        <text>我喜欢贾静雯，贾静雯也喜欢我</text>
-      </view><view class="recommendItem">
-        <image src="/static/images/nvsheng.jpg"></image>
-        <text>我喜欢贾静雯，贾静雯也喜欢我</text>
+      <view class="recommendItem" wx:for-item='recommendItem' wx:for="{{recommendList}}" wx:key='id'>
+        <image src="{{recommendItem.picUrl}}"></image>
+        <text>{{recommendItem.name}}</text>
       </view>
     </scroll-view>
   </view>
