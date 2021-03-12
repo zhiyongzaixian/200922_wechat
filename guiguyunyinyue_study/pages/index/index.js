@@ -7,6 +7,7 @@ Page({
   data: {
     bannersList: [], // 轮播图数据
     recommendList: [],// 推荐歌曲数据
+    topList: [], // 排行榜数据
   },
 
   /**
@@ -29,6 +30,33 @@ Page({
     this.setData({
       recommendList: recommendListResult.result
     })
+
+    // 获取排行榜数据
+    /*
+      idx: 0-20
+      需求： 0-4
+
+    */
+    let index = 0;
+    let topListArr = [];
+    while(index < 5){
+      let topListResult = await request('/top/list', {idx: index++});
+      // slice 截取不会影响原数组 splice可以对数组进行增删改，会影响原数组 
+      let obj = {name: topListResult.playlist.name, tracks: topListResult.playlist.tracks.slice(0, 3)};
+      topListArr.push(obj);
+      // 用户等待时间较短，体验较好，会渲染多次，会导致项目性能变差
+      this.setData({
+        topList: topListArr
+      })
+    }
+
+    // 更新状态数据, 等待时间比较久，用户体验较差， 只需要渲染一次
+    // this.setData({
+    //   topList: topListArr
+    // })
+
+  
+    
   },
 
   /**
