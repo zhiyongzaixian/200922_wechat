@@ -42,24 +42,13 @@
 .recommendContainer  {
   padding: 20rpx;
 }
-.recommendContainer .header .title {
-  font-size: 32rpx;
-  color: #333;
-}
 
-.recommendContainer .header .more {
-  float: right;
-  font-size: 26rpx;
-  border: 1rpx solid #333;
-  padding: 10rpx 20rpx;
-  border-radius: 20rpx;
-
-}
 
 
 /* 推荐歌曲内容区  */
 .recommendScroll {
   display: flex;
+  height: 300rpx;
 }
 
 .recommendItem {
@@ -86,4 +75,42 @@
   display: -webkit-box;
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 2;
+}
+
+
+/* 排行榜区域 */
+.topList {
+  padding: 20rpx;
+}
+
+.topListSwiper {
+  height: 400rpx;
+}
+.swiperItem .title {
+  line-height: 70rpx;
+  height: 70rpx;
+}
+
+.musicInfo {
+  height: 100rpx;
+  /* 当设置display: flex以后会自动将其子元素变成block */
+  display: flex;
+  margin-bottom: 20rpx;
+}
+
+.musicInfo image {
+  width: 100rpx;
+  height: 100rpx;
+  border-radius: 10rpx;
+}
+
+.musicInfo  .count {
+  width: 100rpx;
+  height: 100rpx;
+  text-align: center;
+  line-height: 100rpx;
+}
+
+.musicInfo  .musicName {
+  line-height: 100rpx;
 }
