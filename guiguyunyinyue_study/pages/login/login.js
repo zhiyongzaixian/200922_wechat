@@ -84,7 +84,7 @@ Page({
     }
 
     // 发请求，进行后端验证
-    let result = await request('/login/cellphone', {phone, password});
+    let result = await request('/login/cellphone', {phone, password, isLogin: true});
     if(result.code === 200){
       // 登录成功
       // 将用户的数据缓存至本地

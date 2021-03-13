@@ -7,6 +7,7 @@ Page({
   data: {
     videoGroupList: [], // 导航标签数据
     navId: '', // 导航标签的id
+    videoList: [], // 视频列表数据
   },
 
   /**
@@ -16,12 +17,27 @@ Page({
     this.getVideoGroupData();
   },
 
-  // 获取初始化数据的功能函数
+  // 获取导航标签数据的功能函数
   async getVideoGroupData(){
     let result = await request('/video/group/list');
     this.setData({
       videoGroupList: result.data.slice(0, 14),
       navId: result.data[0].id
+    })
+
+    this.getVideoList(this.data.navId);
+  },
+
+  // 获取视频列表数据
+  async getVideoList(navId){
+    let result = await request('/video/group', {id: navId});
+    let index = 0;
+    let videoList = result.datas.map(item => {
+      item.id = index++;
+      return item;
+    })
+    this.setData({
+      videoList
     })
   },
 

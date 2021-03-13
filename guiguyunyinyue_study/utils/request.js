@@ -28,8 +28,19 @@ export default (url, data={}, method='GET') => {
       url: config.host + url,
       data,
       method,
+      header: {
+        cookie: wx.getStorageSync('cookies')?wx.getStorageSync('cookies').toString():''
+      },
       success: (res) => {
-        // console.log(res.data);
+        console.log(res);
+        // 判断当前的请求是否是登录请求
+        if(data.isLogin){
+          // 将用户的cookie存入至本地
+          wx.setStorage({
+            key: 'cookies',
+            data: res.cookies
+          })
+        }
         // 异步任务成功， 调用resolve, 修改promise实例的状态为成功状态resolved
         resolve(res.data);
       },
