@@ -18,6 +18,8 @@
 
 
 */
+
+import request from '../../utils/request'
 Page({
 
   /**
@@ -49,7 +51,7 @@ Page({
   },
 
   // 登录的回调
-  login(){
+  async login(){
     let {phone, password} = this.data;
 
     // 验证手机号
@@ -82,6 +84,38 @@ Page({
     }
 
     // 发请求，进行后端验证
+    let result = await request('/login/cellphone', {phone, password});
+    if(result.code === 200){
+      // 登录成功
+      // 将用户的数据缓存至本地
+      wx.setStorageSync('userInfo', result.profile)
+
+      // 跳转至个人中心页
+      wx.switchTab({
+        url: '/pages/personal/personal',
+      })
+
+    }else if(result.code === 400){
+      wx.showToast({
+        title: '手机号错误',
+        icon: 'none'
+      })
+
+      return;
+    }else if(result.code === 502){
+      wx.showToast({
+        title: '密码错误',
+        icon: 'none'
+      })
+
+      return;
+    }else {
+      wx.showToast({
+        title: '登录失败，请重新登录',
+        icon: 'none'
+      })
+      return;
+    }
   },
 
   /**
