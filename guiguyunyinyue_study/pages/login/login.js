@@ -91,10 +91,10 @@ Page({
       wx.setStorageSync('userInfo', result.profile)
 
       // 跳转至个人中心页
-      wx.switchTab({
+      wx.reLaunch({
         url: '/pages/personal/personal',
       })
-
+      
     }else if(result.code === 400){
       wx.showToast({
         title: '手机号错误',

@@ -6,7 +6,7 @@
     3. 控制cover实时位移
     4. 实现cover回弹，过渡
 */
-
+import request from '../../utils/request';
 let startY = 0; // 起始坐标
 let moveY = 0; // 实时坐标
 let moveDistance = 0; // 移动距离
@@ -17,14 +17,36 @@ Page({
    */
   data: {
     coverTransform: '',
-    coverTransition: ''
+    coverTransition: '',
+    userInfo: {}, // 用户信息
+    recentPlayList: [], // 用户最近播放记录
   },
 
   /**
    * 生命周期函数--监听页面加载
    */
   onLoad: function (options) {
-
+    // 获取本地用户信息
+    let userInfo = wx.getStorageSync('userInfo');
+    this.setData({
+      userInfo
+    })
+    if(userInfo){
+      // 获取用户播放记录
+      this.getRecentPlay(this.data.userInfo.userId);
+    }
+  },
+  // 获取用户播放记录的功能函数
+  async getRecentPlay(userId){
+    let result = await request('/user/record', {uid: userId, type: 0});
+    let index = 0;
+    let recentPlayList = result.allData.slice(0, 10).map(item => {
+      item.id = index++;
+      return item;
+    })
+    this.setData({
+      recentPlayList
+    })
   },
 
   handleTouchStart(event){
@@ -61,7 +83,16 @@ Page({
     })
   },
 
-
+  // 跳转至登录页login
+  toLogin(){
+    // 判断用户是否已经登录
+    if(this.data.userInfo.nickname){
+      return;
+    }
+    wx.navigateTo({
+      url: '/pages/login/login',
+    })
+  },
   /**
    * 生命周期函数--监听页面初次渲染完成
    */
