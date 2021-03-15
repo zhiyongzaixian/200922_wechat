@@ -38,6 +38,10 @@
 .changeAll {
   float: right;
 }
+
+.listScroll {
+  height: calc(100vh - 380rpx);
+}
 .recommendItem {
   display: flex;
   position: relative;
