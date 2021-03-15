@@ -52,7 +52,9 @@
 .videoListScroll {
   margin-top: 20rpx;
   /* 视口单位： vh vw  1vh = 1%视口高度 */
-  height:calc(100vh - 162rpx);
+  /* height:calc(100vh - 162rpx); */
+  height:calc(100vh - 100rpx); /*测试页面上拉触底*/
+
 }
 .videoItem {
   padding: 0 3%;
