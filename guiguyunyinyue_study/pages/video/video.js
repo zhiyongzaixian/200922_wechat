@@ -1654,7 +1654,7 @@ Page({
       }
     }else {
       return {
-        title: 'button自定义转发',
+        title: 'button 自定义转发',
         path: '/pages/video/video',
         imageUrl: '/static/images/nvsheng.jpg'
       }
