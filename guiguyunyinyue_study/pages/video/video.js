@@ -9,7 +9,10 @@ Page({
     navId: '', // 导航标签的id
     videoList: [], // 视频列表数据
     videoId: '', // 视频id标识
+    videoUpdateTime: [], // 存放视频播放时长的数据
   },
+
+  
 
   /**
    * 生命周期函数--监听页面加载
@@ -54,8 +57,8 @@ Page({
 
   // 点击导航的回调
   changeNav(event){
-    let navId = event.currentTarget.id; // 通过id获取标识数据会自动将number转换成string
-    // let navId = event.currentTarget.dataset.id;
+    // let navId = event.currentTarget.id; // 通过id获取标识数据会自动将number转换成string
+    let navId = event.currentTarget.dataset.id;
     this.setData({
       navId: navId>>>0,
       videoList: []
@@ -89,8 +92,49 @@ Page({
     // this.videoId !== videoId && this.videoContext && this.videoContext.stop();
     // this.videoId = videoId;
     this.videoContext = wx.createVideoContext(videoId);
+    // 判断当前视频之前是否被播放过
+    let {videoUpdateTime} = this.data;
+    let videoObj = videoUpdateTime.find(item => item.videoId === videoId);
+    if(videoObj){
+      // 跳转至指定的位置
+      this.videoContext.seek(videoObj.currentTime);
+    }
     this.videoContext.play();
     // videoContext.stop();
+  },
+
+  // 视频播放进度的回调
+  handleTimeUpdate(event){
+    console.log(event);
+    let {videoUpdateTime, videoId} = this.data;
+    let obj = {currentTime: event.detail.currentTime, videoId};
+    /*
+    思路： 判断videoUpdateTime中是否有当前视频相关对象
+      1. 如果没有，直接push
+      2. 如果已有，在原有基础上修改currentTime
+    */ 
+    let videoObj = videoUpdateTime.find(item => item.videoId === videoId);
+    if(!videoObj){
+      // 之前没有
+      videoUpdateTime.push(obj);
+    }else {
+      // 已有该对象
+      videoObj.currentTime = event.detail.currentTime;
+    }
+
+    this.setData({
+      videoUpdateTime
+    })
+    
+  },
+
+  // 视频播放结束的回调
+  handleEnded(){
+    // 清除 videoUpdateTime 中记录当前视频播放时长的对象
+    let {videoUpdateTime, videoId} = this.data;
+    // videoUpdateTime.splice(index, number);
+    // let index = videoUpdateTime.findIndex(item => item.videoId === videoId)
+    videoUpdateTime.splice(videoUpdateTime.findIndex(item => item.videoId === videoId), 1);
   },
   /**
    * 生命周期函数--监听页面初次渲染完成

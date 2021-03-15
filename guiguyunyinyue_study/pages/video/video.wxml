@@ -7,8 +7,14 @@
   </view>
 
   <!-- 导航区域 -->
-  <scroll-view scroll-x enable-flex class="navContainer">
-    <view bindtap="changeNav" id="{{item.id}}" data-id='{{item.id}}' data-test='123' class="navItem"
+  <scroll-view
+    scroll-x
+    enable-flex 
+    class="navContainer"
+    scroll-into-view='{{"scroll" + navId}}'
+    scroll-with-animation
+    >
+    <view bindtap="changeNav" id="{{'scroll' + item.id}}" data-id='{{item.id}}' data-test='123' class="navItem"
       wx:for="{{videoGroupList}}" wx:key='id'>
       <view class="navContent {{navId === item.id && 'active'}}">
         {{item.name}}
@@ -27,6 +33,8 @@
         poster='{{item.data.coverUrl}}'
         class="common"
         wx:if="{{videoId === item.data.vid}}"
+        bindtimeupdate='handleTimeUpdate'
+        bindended='handleEnded'
       ></video>
       <image id="{{item.data.vid}}" bindtap="handlePlay" wx:else class="common" src="{{item.data.coverUrl}}"></image>
 
