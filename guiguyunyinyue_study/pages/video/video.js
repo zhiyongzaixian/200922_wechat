@@ -50,6 +50,30 @@ Page({
     })
   },
 
+  // 点击视频播放/继续播放的回调
+  handlePlay(event){
+    /*
+    需求： 点击新的视频播放的时候先关闭之前播放的视频
+    思路： 
+      1. 如果关闭视频： let videoContext = wx.createVideoContext(videoId) ---> videoContext.stop()
+      2. 如何找到上一个播放的视频的上下文对象
+      3. 单例模式： 批量生产同类型对象的时候始终赋值给一个变量, 节省内存
+      4. 如何确保点击播放的视频和上一个播放的视频不是同一个，才停止播放 ---> videoId
+    
+    */ 
+
+    let videoId = event.currentTarget.id;
+    // this.videoContext = undefined || 上一个播放的视频的上下文对象
+    this.videoId !== videoId && this.videoContext && this.videoContext.stop();
+    // if(this.videoId !== videoId){
+    //   if(this.videoContext){
+    //     this.videoContext.stop();
+    //   }
+    // }
+    this.videoId = videoId;
+    this.videoContext = wx.createVideoContext(videoId);
+    // videoContext.stop();
+  },
   /**
    * 生命周期函数--监听页面初次渲染完成
    */

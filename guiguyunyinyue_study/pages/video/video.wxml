@@ -19,7 +19,12 @@
   <!-- 视频列表区域 -->
   <scroll-view scroll-y>
     <view class="videoItem" wx:for="{{videoList}}" wx:key='id'>
-      <video src="{{item.data.urlInfo.url}}"></video>
+      <video 
+        src="{{item.data.urlInfo.url}}"
+        object-fit='cover'
+        bindplay='handlePlay'
+        id="{{item.data.vid}}"
+      ></video>
 
       <view class="content">{{item.data.title}}</view>
 

@@ -29,10 +29,12 @@ export default (url, data={}, method='GET') => {
       data,
       method,
       header: {
-        cookie: wx.getStorageSync('cookies')?wx.getStorageSync('cookies').toString():''
+        //cookie: wx.getStorageSync('cookies')?wx.getStorageSync('cookies').toString():''
+        cookie: wx.getStorageSync('cookies')?wx.getStorageSync('cookies').find(item => item.indexOf('MUSIC_U') !== -1):''
+
       },
       success: (res) => {
-        console.log(res);
+        // console.log(res);
         // 判断当前的请求是否是登录请求
         if(data.isLogin){
           // 将用户的cookie存入至本地
@@ -45,7 +47,7 @@ export default (url, data={}, method='GET') => {
         resolve(res.data);
       },
       fail: (err) => {
-        console.log('请求失败', err)
+        // console.log('请求失败', err)
         // 异步任务失败， 调用 reject, 修改promise实例的状态为成功状态rejected
         reject(err);
       }
