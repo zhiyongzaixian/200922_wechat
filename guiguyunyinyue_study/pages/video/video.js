@@ -8,13 +8,21 @@ Page({
     videoGroupList: [], // 导航标签数据
     navId: '', // 导航标签的id
     videoList: [], // 视频列表数据
+    videoId: '', // 视频id标识
   },
 
   /**
    * 生命周期函数--监听页面加载
    */
   onLoad: function (options) {
-    this.getVideoGroupData();
+
+    if(wx.getStorageSync('userInfo')){
+      this.getVideoGroupData();
+    }else {
+      wx.reLaunch({
+        url: '/pages/login/login',
+      })
+    }
   },
 
   // 获取导航标签数据的功能函数
@@ -36,6 +44,9 @@ Page({
       item.id = index++;
       return item;
     })
+
+    // 关闭正在加载提示
+    wx.hideLoading();
     this.setData({
       videoList
     })
@@ -46,8 +57,15 @@ Page({
     let navId = event.currentTarget.id; // 通过id获取标识数据会自动将number转换成string
     // let navId = event.currentTarget.dataset.id;
     this.setData({
-      navId: navId>>>0
+      navId: navId>>>0,
+      videoList: []
     })
+    // 显示正在加载
+    wx.showLoading({
+      title: '正在加载',
+    })
+    // 获取当前导航下的最新视频数据
+    this.getVideoList(this.data.navId);
   },
 
   // 点击视频播放/继续播放的回调
@@ -63,15 +81,15 @@ Page({
     */ 
 
     let videoId = event.currentTarget.id;
+    this.setData({
+      videoId
+    })
     // this.videoContext = undefined || 上一个播放的视频的上下文对象
-    this.videoId !== videoId && this.videoContext && this.videoContext.stop();
-    // if(this.videoId !== videoId){
-    //   if(this.videoContext){
-    //     this.videoContext.stop();
-    //   }
-    // }
-    this.videoId = videoId;
+    // 解决多个视频同时播放问题
+    // this.videoId !== videoId && this.videoContext && this.videoContext.stop();
+    // this.videoId = videoId;
     this.videoContext = wx.createVideoContext(videoId);
+    this.videoContext.play();
     // videoContext.stop();
   },
   /**
