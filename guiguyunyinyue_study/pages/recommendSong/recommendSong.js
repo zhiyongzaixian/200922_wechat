@@ -29,6 +29,18 @@ Page({
     })
   },
 
+  // 跳转至songDetail
+  toSongDetail(event){
+    let song = event.currentTarget.dataset.song;
+    // Vue路由跳转传参： query， params，props(布尔值，对象，函数)，meta
+    // 小程序路由传参： query
+    wx.navigateTo({
+      // 原生小程序对query参数有长度限制，如果长度过长会自动截取
+      // url: '/pages/songDetail/songDetail?song=' + JSON.stringify(song),
+      url: '/pages/songDetail/songDetail?musicId=' + song.id,
+
+    })
+  },
   /**
    * 生命周期函数--监听页面初次渲染完成
    */
