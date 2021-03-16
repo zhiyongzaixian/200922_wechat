@@ -38,10 +38,17 @@ Page({
       */ 
       let {index, recommendList} = this.data;
       if(switchType === 'pre'){ // 上一首
+        (index === 0) && (index = recommendList.length);
         index -= 1;
       }else { // 下一首
+        (index === recommendList.length - 1) && (index = -1);
         index += 1;
       }
+
+      // 更新最新的音乐下标
+      this.setData({
+        index
+      })
       // 计算最新的音乐musicId
       let musicId = recommendList[index].id;
       // 将最新的 musicId 发布给 songDetail详情页
