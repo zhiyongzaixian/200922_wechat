@@ -12,6 +12,7 @@ Page({
     isPlay: false, // 标识音乐是否播放
     songDetail: {}, // 歌曲详情对象
     musicId: '', // 音乐的id
+    musicLink: ''
   },
 
   /**
@@ -61,7 +62,11 @@ Page({
     // 订阅来自 列表页recommendList 发布的消息
     MyPubSub.subscribe('musicId', (musicId) => {
       // console.log('来自 列表页recommendList 发布的消息: ')
-      console.log(musicId);
+
+      // 发请求获取最新歌曲的详情  
+      this.getSongDetail(musicId);
+      // 自动播放最新的歌曲
+      this.musicControl(true, musicId);
     })
   },
 
@@ -96,18 +101,23 @@ Page({
     this.setData({
       isPlay
     })
-    let musicId = this.data.musicId;
-    this.musicControl(isPlay, musicId);
+    let {musicId, musicLink} = this.data;
+    this.musicControl(isPlay, musicId, musicLink);
   },
 
   // 封装控制音乐播放/暂停的功能函数
-  async musicControl(isPlay, musicId){
+  async musicControl(isPlay, musicId, musicLink){
     
     if(isPlay){ // 音乐播放
 
-      // 获取音频播放地址
-      let musicLinkData = await request('/song/url', {id: musicId});
-      let musicLink = musicLinkData.data[0].url;
+      if(!musicLink){
+        // 获取音频播放地址
+        let musicLinkData = await request('/song/url', {id: musicId});
+        musicLink = musicLinkData.data[0].url;
+        this.setData({
+          musicLink
+        })
+      }
      
       this.backgroundAudioManager.src = musicLink;
       this.backgroundAudioManager.title = this.data.songDetail.name;
@@ -126,6 +136,8 @@ Page({
   // 点击切歌的回调
   handleSwitch(event){
     let type = event.currentTarget.id;
+    // 停止当前播放的音乐
+    this.backgroundAudioManager.stop();
     // 将切换歌曲的类型 交给 列表页
     MyPubSub.publish('switchType', type);
 
