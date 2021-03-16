@@ -1,3 +1,4 @@
+import PubSub from 'pubsub-js';
 import request from '../../utils/request'
 const appInstance = getApp();
 
@@ -37,6 +38,33 @@ Page({
       })
     }
 
+    // 创建控制音频播放的实例
+    this.backgroundAudioManager = wx.getBackgroundAudioManager();
+    // 监听音乐播放
+    this.backgroundAudioManager.onPlay(() => {
+      this.changePlayState(true);
+      appInstance.globalData.musicId = musicId;
+    });
+
+    // 监听音乐暂停
+    this.backgroundAudioManager.onPause(() => {
+      this.changePlayState(false);
+    });
+
+    // 监听音乐停止
+    this.backgroundAudioManager.onStop(() => {
+      this.changePlayState(false);
+    });
+  },
+
+  // 封装修改状态的功能函数
+  changePlayState(isPlay){
+    this.setData({
+      isPlay
+    })
+
+    // 修改全局播放状态
+    appInstance.globalData.isMusicPlay = isPlay;
   },
 
   // 获取歌曲详情的功能函数
@@ -55,6 +83,7 @@ Page({
 
   // 点击切换播放的回调
   handleMusicPlay(){
+
     let isPlay =  !this.data.isPlay;
     this.setData({
       isPlay
@@ -65,27 +94,32 @@ Page({
 
   // 封装控制音乐播放/暂停的功能函数
   async musicControl(isPlay, musicId){
-    // 创建控制音频播放的实例
-    let backgroundAudioManager = wx.getBackgroundAudioManager();
+    
     if(isPlay){ // 音乐播放
 
       // 获取音频播放地址
       let musicLinkData = await request('/song/url', {id: musicId});
       let musicLink = musicLinkData.data[0].url;
      
-      backgroundAudioManager.src = musicLink;
-      backgroundAudioManager.title = this.data.songDetail.name;
+      this.backgroundAudioManager.src = musicLink;
+      this.backgroundAudioManager.title = this.data.songDetail.name;
 
       // 修改全局音乐播放的记录
       appInstance.globalData.isMusicPlay = true;
       appInstance.globalData.musicId = musicId;
     }else { // 音乐暂停
-      backgroundAudioManager.pause();
+      this.backgroundAudioManager.pause();
       appInstance.globalData.isMusicPlay = false;
-      appInstance.globalData.musicId = musicId;
+      
     }
   },
 
+
+  // 点击切歌的回调
+  handleSwitch(event){
+    let type = event.currentTarget.id;
+    console.log(type);
+  },
   /**
    * 生命周期函数--监听页面初次渲染完成
    */
