@@ -1,4 +1,5 @@
 import PubSub from 'pubsub-js';
+import MyPubSub from '../../utils/myPubSub';
 import request from '../../utils/request'
 const appInstance = getApp();
 
@@ -55,6 +56,13 @@ Page({
     this.backgroundAudioManager.onStop(() => {
       this.changePlayState(false);
     });
+
+
+    // 订阅来自 列表页recommendList 发布的消息
+    MyPubSub.subscribe('musicId', (musicId) => {
+      // console.log('来自 列表页recommendList 发布的消息: ')
+      console.log(musicId);
+    })
   },
 
   // 封装修改状态的功能函数
@@ -118,7 +126,12 @@ Page({
   // 点击切歌的回调
   handleSwitch(event){
     let type = event.currentTarget.id;
-    console.log(type);
+    // 将切换歌曲的类型 交给 列表页
+    MyPubSub.publish('switchType', type);
+
+    
+    
+
   },
   /**
    * 生命周期函数--监听页面初次渲染完成
