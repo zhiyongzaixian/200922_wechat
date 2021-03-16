@@ -1,4 +1,5 @@
 import PubSub from 'pubsub-js';
+import moment from 'moment';
 import MyPubSub from '../../utils/myPubSub';
 import request from '../../utils/request'
 const appInstance = getApp();
@@ -12,7 +13,10 @@ Page({
     isPlay: false, // 标识音乐是否播放
     songDetail: {}, // 歌曲详情对象
     musicId: '', // 音乐的id
-    musicLink: ''
+    musicLink: '',
+    currentTime: '00:00', // 当前播放的时长
+    durationTime: '00:00', // 总时长
+    currentWidth: 0, // 实时进度条的长度
   },
 
   /**
@@ -58,6 +62,25 @@ Page({
       this.changePlayState(false);
     });
 
+    // 监听音乐实时播放的进度
+    this.backgroundAudioManager.onTimeUpdate(() => {
+      console.log(this.backgroundAudioManager.currentTime, this.backgroundAudioManager.duration)
+      let currentTime = moment(this.backgroundAudioManager.currentTime*1000).format('mm:ss');
+
+      let currentWidth = this.backgroundAudioManager.currentTime/this.backgroundAudioManager.duration*450;
+      this.setData({
+        currentTime,
+        currentWidth
+      })
+    });
+
+    // 监听音乐自然播放结束
+    this.backgroundAudioManager.onEnded(() => {
+      // 自动切换至下一首音乐
+      // 将切换歌曲的类型 交给 列表页
+      MyPubSub.publish('switchType', 'next');
+    });
+
 
     // 订阅来自 列表页recommendList 发布的消息
     MyPubSub.subscribe('musicId', (musicId) => {
@@ -83,9 +106,11 @@ Page({
   // 获取歌曲详情的功能函数
   async getSongDetail(musicId){
     let result = await request('/song/detail', {ids: musicId});
+    let durationTime = moment(result.songs[0].dt).format('mm:ss');
     // 更新songDetail的状态
     this.setData({
-      songDetail: result.songs[0]
+      songDetail: result.songs[0],
+      durationTime
     })
 
     // 动态设置窗口标题

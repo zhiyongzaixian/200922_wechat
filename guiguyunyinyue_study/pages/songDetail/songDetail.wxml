@@ -9,7 +9,18 @@
 
 
 
+  <!-- 进度条区域 -->
+  <view class="progress-control">
+    <text>{{currentTime}}</text>
+    <view class="bar-control">
+      <view class="current-time" style="width: {{currentWidth + 'rpx'}}">
+        <view class="bar-circle">
 
+        </view> 
+      </view>
+    </view>
+    <text>{{durationTime}}</text>
+  </view>
 
 
 
